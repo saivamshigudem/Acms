@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Constitution & Spec Summary</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .principle { background: #f0f8ff; padding: 10px; margin: 5px 0; }
+        .story { background: #fff5f5; padding: 10px; margin: 5px 0; }
+        h2 { color: #2c5aa0; }
+        h3 { color: #d9534f; }
+    </style>
+</head>
+<body>
+    <h1>ACMS Constitution & Specification Summary</h1>
+    
+    <div class="section">
+        <h2>Constitution.md - Governance & Development Standards</h2>
+        
+        <h3>Core Principles</h3>
+        <div class="principle">
+            <strong>API-First Design:</strong> Every feature exposed through REST APIs compliant with OpenAPI 3.0. APIs are primary contract, implementation follows specification.
+        </div>
+        <div class="principle">
+            <strong>Specification-Driven Development:</strong> Specifications are source of truth. All code generation, testing, and implementation derive from approved OpenAPI specs.
+        </div>
+        <div class="principle">
+            <strong>Test-First Automation:</strong> Automated testing mandatory and driven by specifications. Test Agent generates tests from OpenAPI specs before implementation.
+        </div>
+        <div class="principle">
+            <strong>Metadata-Driven Governance:</strong> All schemas/APIs include governance metadata: x-owner, x-version, x-description for traceability.
+        </div>
+        <div class="principle">
+            <strong>Secure by Default:</strong> OAuth2/JWT authentication mandatory. RBAC authorization. Input validation via JSON Schema enforced.
+        </div>
+        <div class="principle">
+            <strong>Observability and Monitoring:</strong> Structured logging with correlation IDs. Response times monitored (<200ms target, 10K req/min capacity).
+        </div>
+        <div class="principle">
+            <strong>Simplicity and Pragmatism:</strong> Avoid over-engineering. Use existing frameworks (Spring Boot, SQLite). Follow YAGNI principles.
+        </div>
+        
+        <h3>Technology Stack</h3>
+        <div class="principle">
+            <strong>Backend:</strong> Java Spring Boot, SQLite3, Spring Data JPA, SLF4J, Springdoc (OpenAPI)
+        </div>
+        <div class="principle">
+            <strong>API Specification:</strong> OpenAPI 3.0, JSON Schema, Semantic versioning, OAuth2/JWT
+        </div>
+        <div class="principle">
+            <strong>Testing:</strong> Python Pytest, automated test generation from OpenAPI specs, 80% minimum coverage
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Spec.md - ACMS Core APIs Feature Specification</h2>
+        
+        <h3>User Story 1 - Agent Management (Priority: P1)</h3>
+        <div class="story">
+            <strong>Scenario:</strong> Insurance administrators need to manage agent records including creating new agents, updating information, retrieving details, and deactivating agents.
+        </div>
+        <div class="story">
+            <strong>Why Priority P1:</strong> Agent management is foundational - all commission tracking depends on accurate agent records.
+        </div>
+        <div class="story">
+            <strong>Acceptance Scenarios:</strong>
+            <ul>
+                <li>Create new agent with valid name, email, commission tier → stored with unique ID</li>
+                <li>Update agent email/commission tier → changes persisted and retrievable</li>
+                <li>Request agent details by ID → all information returned accurately</li>
+                <li>Deactivate agent with active commissions → status changes, historical records intact</li>
+            </ul>
+        </div>
+        
+        <h3>User Story 2 - Policy Management (Priority: P1)</h3>
+        <div class="story">
+            <strong>Scenario:</strong> Insurance administrators need to create and manage group insurance policies, linking them to agents and tracking policy details.
+        </div>
+        <div class="story">
+            <strong>Why Priority P1:</strong> Policies are basis for commission calculations - without policy records, commission tracking cannot function.
+        </div>
+        <div class="story">
+            <strong>Acceptance Scenarios:</strong>
+            <ul>
+                <li>Create policy with valid coverage type, premium, effective date → stored with unique ID, linked to agent</li>
+                <li>Update policy premium/coverage details → changes persisted</li>
+                <li>Retrieve policy by ID → all details including linked agent returned</li>
+                <li>Mark policy as inactive → status changes, commission records remain traceable</li>
+            </ul>
+        </div>
+        
+        <h3>User Story 3 - Commission Calculation (Priority: P1)</h3>
+        <div class="story">
+            <strong>Scenario:</strong> System must automatically calculate commissions based on policy premiums and agent commission tiers, creating commission records that can be retrieved and tracked.
+        </div>
+        <div class="story">
+            <strong>Why Priority P1:</strong> Commission calculation is core business function - without accurate calculations, system has no value.
+        </div>
+        <div class="story">
+            <strong>Acceptance Scenarios:</strong>
+            <ul>
+                <li>Create policy with known premium → commission calculated correctly based on agent tier</li>
+                <li>Retrieve commission record → contains policy reference, agent reference, calculated amount</li>
+                <li>Update agent commission tier → future commissions use new rate, historical records unchanged</li>
+            </ul>
+        </div>
+        
+        <h3>User Story 4 - Payment Processing (Priority: P2)</h3>
+        <div class="story">
+            <strong>Scenario:</strong> System needs to track commission payments to agents, including payment dates, amounts, and payment status.
+        </div>
+        <div class="story">
+            <strong>Why Priority P2:</strong> Payment tracking is important but can be implemented after core commission calculation works.
+        </div>
+        <div class="story">
+            <strong>Acceptance Scenarios:</strong>
+            <ul>
+                <li>Record commission payment → payment linked to commission record, status updated</li>
+                <li>Retrieve payment history → all payments for agent returned with dates and amounts</li>
+                <li>Update payment status → status change reflected in payment record</li>
+            </ul>
+        </div>
+        
+        <h3>User Story 5 - Reporting (Priority: P2)</h3>
+        <div class="story">
+            <strong>Scenario:</strong> Administrators need reports on agent performance, commission totals, and payment summaries.
+        </div>
+        <div class="story">
+            <strong>Why Priority P2:</strong> Reporting is valuable for business insights but not critical for core functionality.
+        </div>
+        <div class="story">
+            <strong>Acceptance Scenarios:</strong>
+            <ul>
+                <li>Generate agent commission report → shows total commissions earned by period</li>
+                <li>Generate payment summary → shows total payments made and outstanding amounts</li>
+                <li>Export reports to CSV/PDF → downloadable format for external use</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Key Requirements Summary</h2>
+        <div class="principle">
+            <strong>API Endpoints Required:</strong>
+            <ul>
+                <li>Agents: GET, POST, PATCH, PUT (deactivate), DELETE</li>
+                <li>Policies: GET, POST, PATCH, PUT (inactive), DELETE</li>
+                <li>Commissions: GET (by agent, by policy, by date range), POST</li>
+                <li>Payments: GET, POST, PATCH (status update)</li>
+                <li>Reports: GET (various report types)</li>
+            </ul>
+        </div>
+        <div class="principle">
+            <strong>Data Models:</strong>
+            <ul>
+                <li>Agent: id, name, email, commission_tier, status, created_at, updated_at</li>
+                <li>Policy: id, agent_id, coverage_type, premium, effective_date, status, created_at</li>
+                <li>Commission: id, policy_id, agent_id, amount, calculated_date, status</li>
+                <li>Payment: id, commission_id, amount, payment_date, status, method</li>
+            </ul>
+        </div>
+        <div class="principle">
+            <strong>Security Requirements:</strong>
+            <ul>
+                <li>OAuth2/JWT authentication for all endpoints</li>
+                <li>Role-based access control (admin, agent, viewer roles)</li>
+                <li>Input validation via JSON Schema</li>
+                <li>Audit logging for all data modifications</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

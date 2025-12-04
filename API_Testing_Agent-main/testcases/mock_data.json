@@ -1,0 +1,236 @@
+{
+  "agents": [
+    {
+      "name": "Patricia Smith",
+      "email": "patricia.smith@acms.example.com",
+      "phoneNumber": "555-5506-5012",
+      "commissionTier": 8.35,
+      "hireDate": "2024-05-08T02:38:33.646575",
+      "address": "9035 Main Street",
+      "city": "Los Angeles",
+      "state": "MD",
+      "postalCode": "78201",
+      "country": "USA",
+      "status": "ACTIVE",
+      "isActive": true,
+      "totalCommissions": 0.0,
+      "notes": "Top performer"
+    },
+    {
+      "name": "William Davis",
+      "email": "william.davis@acms.example.com",
+      "phoneNumber": "555-9279-1434",
+      "commissionTier": 13.42,
+      "hireDate": "2021-04-13T02:38:33.646639",
+      "address": "9028 Main Street",
+      "city": "San Antonio",
+      "state": "GA",
+      "postalCode": "92101",
+      "country": "USA",
+      "status": "ON_LEAVE",
+      "isActive": true,
+      "totalCommissions": 0.0,
+      "notes": "Reliable agent"
+    }
+  ],
+  "policies": [
+    {
+      "agentId": 1,
+      "coverageType": "VISION",
+      "premium": 101.56,
+      "effectiveDate": "2025-12-03T02:38:33.646718",
+      "expirationDate": "2026-12-03T02:38:33.646718",
+      "status": "ACTIVE"
+    },
+    {
+      "agentId": 1,
+      "coverageType": "LIFE",
+      "premium": 961.49,
+      "effectiveDate": "2025-12-03T02:38:33.646740",
+      "expirationDate": "2026-12-03T02:38:33.646740",
+      "status": "INACTIVE"
+    },
+    {
+      "agentId": 1,
+      "coverageType": "HEALTH",
+      "premium": 639.12,
+      "effectiveDate": "2025-12-03T02:38:33.646752",
+      "expirationDate": "2026-12-03T02:38:33.646752",
+      "status": "ACTIVE"
+    },
+    {
+      "agentId": 1,
+      "coverageType": "DENTAL",
+      "premium": 431.37,
+      "effectiveDate": "2025-12-03T02:38:33.646762",
+      "expirationDate": "2026-12-03T02:38:33.646762",
+      "status": "INACTIVE"
+    },
+    {
+      "agentId": 2,
+      "coverageType": "HEALTH",
+      "premium": 1413.7,
+      "effectiveDate": "2025-12-03T02:38:33.646925",
+      "expirationDate": "2026-12-03T02:38:33.646925",
+      "status": "ACTIVE"
+    },
+    {
+      "agentId": 2,
+      "coverageType": "DISABILITY",
+      "premium": 1147.86,
+      "effectiveDate": "2025-12-03T02:38:33.646935",
+      "expirationDate": "2026-12-03T02:38:33.646935",
+      "status": "ACTIVE"
+    },
+    {
+      "agentId": 2,
+      "coverageType": "VISION",
+      "premium": 110.38,
+      "effectiveDate": "2025-12-03T02:38:33.646945",
+      "expirationDate": "2026-12-03T02:38:33.646945",
+      "status": "ACTIVE"
+    },
+    {
+      "agentId": 2,
+      "coverageType": "DENTAL",
+      "premium": 429.28,
+      "effectiveDate": "2025-12-03T02:38:33.646954",
+      "expirationDate": "2026-12-03T02:38:33.646954",
+      "status": "ACTIVE"
+    }
+  ],
+  "commissions": [
+    {
+      "policyId": 1,
+      "agentId": 1,
+      "commissionTier": 8.35,
+      "calculatedAmount": 83.5,
+      "calculationDate": "2025-12-03T02:38:33.646786",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 2,
+      "agentId": 1,
+      "commissionTier": 8.35,
+      "calculatedAmount": 83.5,
+      "calculationDate": "2025-12-03T02:38:33.646843",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 3,
+      "agentId": 1,
+      "commissionTier": 8.35,
+      "calculatedAmount": 83.5,
+      "calculationDate": "2025-12-03T02:38:33.646878",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 4,
+      "agentId": 1,
+      "commissionTier": 8.35,
+      "calculatedAmount": 83.5,
+      "calculationDate": "2025-12-03T02:38:33.646900",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 5,
+      "agentId": 2,
+      "commissionTier": 13.42,
+      "calculatedAmount": 134.2,
+      "calculationDate": "2025-12-03T02:38:33.646965",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 6,
+      "agentId": 2,
+      "commissionTier": 13.42,
+      "calculatedAmount": 134.2,
+      "calculationDate": "2025-12-03T02:38:33.646978",
+      "status": "APPROVED"
+    },
+    {
+      "policyId": 7,
+      "agentId": 2,
+      "commissionTier": 13.42,
+      "calculatedAmount": 134.2,
+      "calculationDate": "2025-12-03T02:38:33.646999",
+      "status": "PENDING"
+    },
+    {
+      "policyId": 8,
+      "agentId": 2,
+      "commissionTier": 13.42,
+      "calculatedAmount": 134.2,
+      "calculationDate": "2025-12-03T02:38:33.647027",
+      "status": "APPROVED"
+    }
+  ],
+  "payments": [
+    {
+      "commissionId": 1,
+      "amount": 60.93,
+      "paymentDate": "2025-11-30T02:38:33.646806",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 1,
+      "amount": 45.04,
+      "paymentDate": "2025-11-24T02:38:33.646820",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 2,
+      "amount": 44.65,
+      "paymentDate": "2025-11-12T02:38:33.646855",
+      "status": "COMPLETED"
+    },
+    {
+      "commissionId": 2,
+      "amount": 74.03,
+      "paymentDate": "2025-12-01T02:38:33.646862",
+      "status": "COMPLETED"
+    },
+    {
+      "commissionId": 3,
+      "amount": 53.36,
+      "paymentDate": "2025-11-13T02:38:33.646887",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 4,
+      "amount": 56.58,
+      "paymentDate": "2025-11-12T02:38:33.646909",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 6,
+      "amount": 85.07,
+      "paymentDate": "2025-11-27T02:38:33.646986",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 7,
+      "amount": 100.6,
+      "paymentDate": "2025-11-05T02:38:33.647007",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 7,
+      "amount": 76.69,
+      "paymentDate": "2025-11-29T02:38:33.647013",
+      "status": "COMPLETED"
+    },
+    {
+      "commissionId": 8,
+      "amount": 106.33,
+      "paymentDate": "2025-11-05T02:38:33.647035",
+      "status": "PENDING"
+    },
+    {
+      "commissionId": 8,
+      "amount": 91.39,
+      "paymentDate": "2025-11-29T02:38:33.647041",
+      "status": "PENDING"
+    }
+  ]
+}

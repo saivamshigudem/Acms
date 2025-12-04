@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Testing Agent - Process Overview</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .file { background: #f5f5f5; padding: 10px; margin: 5px 0; }
+        .flow { background: #e8f4fd; padding: 15px; }
+        code { background: #f0f0f0; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>API Testing Agent - Complete Process Overview</h1>
+    
+    <div class="section">
+        <h2>1. Project Structure</h2>
+        <div class="file">
+            <strong>API-testing-agent_penguinalpha/</strong>
+            <ul>
+                <li><strong>src/</strong> - Core Python modules</li>
+                <li><strong>templates/</strong> - Jinja2 templates for test generation</li>
+                <li><strong>generated_tests/</strong> - Output directory for AI-generated tests</li>
+                <li><strong>docs/</strong> - Documentation files</li>
+                <li><strong>examples/</strong> - Sample OpenAPI specs and user stories</li>
+                <li><strong>requirements.txt</strong> - Python dependencies</li>
+                <li><strong>.env</strong> - Environment configuration</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section flow">
+        <h2>2. Process Flow</h2>
+        <ol>
+            <li><strong>Input Files:</strong>
+                <ul>
+                    <li>constitution.md - Governance rules and standards</li>
+                    <li>spec.md - Feature specifications and user stories</li>
+                </ul>
+            </li>
+            <li><strong>AI Processing:</strong>
+                <ul>
+                    <li>Ollama server with Llama3 model</li>
+                    <li>Parses constitution and spec files</li>
+                    <li>Generates test cases based on requirements</li>
+                </ul>
+            </li>
+            <li><strong>Output:</strong>
+                <ul>
+                    <li>test_agents_ai.py - Generated pytest test suite</li>
+                    <li>Covers happy path, edge cases, error scenarios</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>3. Key Files and Their Purpose</h2>
+        <div class="file">
+            <strong>generate_tests_ai.py</strong> - Main script that:
+            <ul>
+                <li>Connects to Ollama server</li>
+                <li>Reads constitution.md and spec.md</li>
+                <li>Calls AI to generate test code</li>
+                <li>Saves output to generated_tests/</li>
+            </ul>
+        </div>
+        <div class="file">
+            <strong>src/ollama_agent.py</strong> - Handles AI communication:
+            <ul>
+                <li>Manages Ollama connection</li>
+                <li>Formats prompts for Llama3</li>
+                <li>Processes AI responses</li>
+            </ul>
+        </div>
+        <div class="file">
+            <strong>src/spec_parser.py</strong> - Parses specification files:
+            <ul>
+                <li>Extracts user stories</li>
+                <li>Identifies acceptance scenarios</li>
+                <li>Structures data for AI processing</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Execution Steps</h2>
+        <ol>
+            <li><code>python verify_setup.py</code> - Check environment</li>
+            <li><code>python check_ollama.py</code> - Verify Ollama connection</li>
+            <li><code>python generate_tests_ai.py --resource agents</code> - Generate tests</li>
+            <li><code>cd generated_tests && pytest test_agents_ai.py -v</code> - Run tests</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>5. Input Processing</h2>
+        <p><strong>Constitution.md</strong> provides governance rules that guide test generation.</p>
+        <p><strong>Spec.md</strong> contains user stories and acceptance scenarios that become test cases.</p>
+        <p>Both files are read by the script and sent to Llama3 as context for intelligent test generation.</p>
+    </div>
+
+    <div class="section">
+        <h2>6. Test Generation Process</h2>
+        <ol>
+            <li>AI reads constitution and spec files</li>
+            <li>Identifies API resources (agents, policies, commissions)</li>
+            <li>Generates pytest functions for each scenario</li>
+            <li>Creates test data and assertions</li>
+            <li>Saves as executable Python test file</li>
+        </ol>
+    </div>
+</body>
+</html>

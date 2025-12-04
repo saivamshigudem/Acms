@@ -1,0 +1,65 @@
+# Test Specification
+
+**Generated**: {{ timestamp }}
+**Total Test Cases**: {{ total_test_cases }}
+**API**: {{ api_title }} v{{ api_version }}
+
+## Overview
+
+This document contains comprehensive test specifications for all API endpoints.
+
+## Test Case Summary
+
+| Scenario Type | Count |
+|---------------|-------|
+{% for scenario_type, count in scenario_summary.items() %}
+| {{ scenario_type }} | {{ count }} |
+{% endfor %}
+
+## Test Cases by Endpoint
+
+{% for endpoint, test_cases in test_cases_by_endpoint.items() %}
+### {{ endpoint }}
+
+{% for test_case in test_cases %}
+#### {{ test_case.name }}
+
+- **Type**: {{ test_case.scenario_type }}
+- **Description**: {{ test_case.description }}
+- **Expected Status**: {{ test_case.expected_status }}
+- **Assertions**:
+{% for assertion in test_case.assertions %}
+  - {{ assertion }}
+{% endfor %}
+
+{% endfor %}
+{% endfor %}
+
+## Test Execution
+
+Run all tests:
+```bash
+pytest -v
+```
+
+Run specific test file:
+```bash
+pytest test_{{ resource }}.py -v
+```
+
+Run specific test:
+```bash
+pytest test_{{ resource }}.py::Test{{ resource.capitalize() }}::test_name -v
+```
+
+Run with coverage:
+```bash
+pytest --cov=. --cov-report=html
+```
+
+## Notes
+
+- All tests require valid authentication tokens
+- Test data should be configured in conftest.py
+- Performance tests validate SLA targets
+- Security tests validate authentication and authorization

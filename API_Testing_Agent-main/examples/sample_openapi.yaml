@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  title: ACMS API
+  version: 1.0.0
+  description: Agent Commission Management System API
+  contact:
+    name: API Support
+    email: support@acms.com
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://api.acms.com
+    description: Production server
+
+paths:
+  /agents:
+    get:
+      summary: List all agents
+      operationId: listAgents
+      tags:
+        - agents
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+        '401':
+          description: Unauthorized
+    
+    post:
+      summary: Create a new agent
+      operationId: createAgent
+      tags:
+        - agents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAgentRequest'
+      responses:
+        '201':
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
+  /agents/{id}:
+    get:
+      summary: Get agent by ID
+      operationId: getAgent
+      tags:
+        - agents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '404':
+          description: Agent not found
+        '401':
+          description: Unauthorized
+    
+    put:
+      summary: Update agent
+      operationId: updateAgent
+      tags:
+        - agents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAgentRequest'
+      responses:
+        '200':
+          description: Agent updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '400':
+          description: Invalid input
+        '404':
+          description: Agent not found
+        '401':
+          description: Unauthorized
+    
+    delete:
+      summary: Delete agent
+      operationId: deleteAgent
+      tags:
+        - agents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Agent deleted
+        '404':
+          description: Agent not found
+        '401':
+          description: Unauthorized
+
+components:
+  schemas:
+    Agent:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - commissionTier
+      properties:
+        id:
+          type: string
+          description: Unique agent identifier
+        name:
+          type: string
+          description: Agent name
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          description: Agent email address
+        commissionTier:
+          type: number
+          description: Commission tier percentage
+          minimum: 0
+          maximum: 100
+        status:
+          type: string
+          enum: [active, inactive]
+          default: active
+        createdDate:
+          type: string
+          format: date-time
+        lastModifiedDate:
+          type: string
+          format: date-time
+    
+    CreateAgentRequest:
+      type: object
+      required:
+        - name
+        - email
+        - commissionTier
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        commissionTier:
+          type: number
+          minimum: 0
+          maximum: 100
+    
+    UpdateAgentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        commissionTier:
+          type: number
+          minimum: 0
+          maximum: 100
+        status:
+          type: string
+          enum: [active, inactive]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

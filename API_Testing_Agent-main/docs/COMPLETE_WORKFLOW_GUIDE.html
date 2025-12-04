@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ACMS Agent - Complete Workflow Guide</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; }
+        .command { background: #f0f0f0; padding: 10px; font-family: monospace; margin: 10px 0; }
+        .file { background: #fffacd; padding: 10px; margin: 10px 0; }
+        .success { background: #d4edda; padding: 10px; margin: 10px 0; }
+        h1 { color: #333; }
+        h2 { color: #667eea; }
+    </style>
+</head>
+<body>
+    <h1>🤖 ACMS API Testing Agent - Complete Workflow</h1>
+    
+    <div class="section">
+        <h2>📍 Where is Your Agent App?</h2>
+        <div class="file">
+            <strong>Main Agent:</strong> run_agent.py<br>
+            <strong>Location:</strong> Root folder of API-testing-agent_penguinalpha<br>
+            <strong>Purpose:</strong> Main controller that orchestrates everything
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚙️ What Does Your Agent Do?</h2>
+        <div class="success">
+            <strong>Core Operations:</strong><br>
+            1. Reads API specifications<br>
+            2. Uses AI (Llama3) to generate test cases<br>
+            3. Creates realistic mock data<br>
+            4. Runs tests against your API<br>
+            5. Generates detailed reports
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 How to Run Your Agent</h2>
+        <div class="command">
+            # First, start Ollama (in separate terminal)<br>
+            ollama serve<br><br>
+            
+            # Then run agent commands:<br>
+            python run_agent.py check          # Check setup<br>
+            python run_agent.py generate       # Generate tests<br>
+            python run_agent.py run            # Run tests<br>
+            python run_agent.py full           # Do everything
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔄 Process After Running</h2>
+        <ol>
+            <li><strong>Prerequisites Check:</strong> Validates Ollama, Llama3, spec files</li>
+            <li><strong>Test Generation:</strong> AI reads specs and creates Python test code</li>
+            <li><strong>Mock Data Creation:</strong> Generates realistic test data</li>
+            <li><strong>Test Execution:</strong> Runs pytest against your API</li>
+            <li><strong>Report Generation:</strong> Creates HTML/JSON/Markdown reports</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📥 What Input Does It Take?</h2>
+        <div class="file">
+            <strong>Primary Inputs:</strong><br>
+            • API Specification files (specs/main/spec.md)<br>
+            • Constitution files (business rules)<br>
+            • Resource type (agents, policies, etc.)<br>
+            • Number of mock items to generate
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📤 What Output Does It Give?</h2>
+        <div class="success">
+            <strong>Generated Outputs:</strong><br>
+            • Test files (Python pytest code)<br>
+            • Mock data (JSON files)<br>
+            • Test reports (HTML, JSON, Markdown)<br>
+            • Execution summary (pass/fail counts)
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📂 Where are Test Cases Generated?</h2>
+        <div class="file">
+            <strong>Location:</strong> testcases/ folder<br>
+            <strong>Files:</strong> test_agents_ai.py and others<br>
+            <strong>Format:</strong> Python pytest files with 50-80+ test cases
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Against What is it Being Tested?</h2>
+        <div class="file">
+            <strong>Target:</strong> Your ACMS API endpoints<br>
+            <strong>Base URL:</strong> http://localhost:8080 (configurable)<br>
+            <strong>Endpoints:</strong> /agents, /policies, /commissions, /payments<br>
+            <strong>Validation:</strong> Response codes, schemas, business logic
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Where are Test Results?</h2>
+        <div class="file">
+            <strong>Report Location:</strong> reports/ folder<br>
+            <strong>Files:</strong><br>
+            • pytest_output.txt (raw test output)<br>
+            • test_output.txt (summary)<br>
+            • test_report.html (interactive report)<br>
+            • test_report.json (machine-readable)
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💻 Commands to Run Files</h2>
+        <div class="command">
+            # Main workflow commands:<br>
+            python run_agent.py check                    # Verify setup<br>
+            python run_agent.py generate --resource agents # Make tests<br>
+            python run_agent.py run                      # Run tests<br>
+            python run_agent.py full --resource agents   # Everything<br><br>
+            
+            # Standalone generator:<br>
+            python generate_tests_ai.py --resource agents<br><br>
+            
+            # Run tests manually:<br>
+            pytest testcases/ -v<br><br>
+            
+            # View reports:<br>
+            start reports/test_report.html
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📁 Current Project Structure</h2>
+        <div class="file" style="font-family: monospace;">
+API-testing-agent_penguinalpha/<br>
+├── run_agent.py           # Main agent ⭐<br>
+├── generate_tests_ai.py   # Test generator<br>
+├── src/                   # Source modules<br>
+├── testcases/             # Generated tests<br>
+├── reports/               # Test results<br>
+├── scripts/               # Utility scripts<br>
+├── docs/                  # Documentation<br>
+├── templates/             # Test templates<br>
+├── examples/              # Sample files<br>
+└── output/                # Generated output
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Common Issues & Solutions</h2>
+        <div class="file">
+            <strong>❌ "Cannot connect to Ollama"</strong><br>
+            Solution: Run <code>ollama serve</code> first<br><br>
+            
+            <strong>❌ "Llama3 model not found"</strong><br>
+            Solution: Run <code>ollama pull llama3</code><br><br>
+            
+            <strong>❌ Tests failing with import errors</strong><br>
+            Solution: Run <code>pip install -r requirements.txt</code>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>✅ Quick Start Summary</h2>
+        <div class="success">
+            <strong>3 Steps to Get Started:</strong><br>
+            1. <code>ollama serve</code> (Terminal 1)<br>
+            2. <code>python run_agent.py check</code> (Terminal 2)<br>
+            3. <code>python run_agent.py full --resource agents</code><br><br>
+            
+            <strong>Then view:</strong> reports/test_report.html
+        </div>
+    </div>
+
+    <p><em>Generated: December 2025 | Framework: Python + Llama3 + Pytest</em></p>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACMS API Testing Agent - Data Flow Explanation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .step { background: #f5f5f5; padding: 15px; margin: 10px 0; border-left: 4px solid #007cba; }
+        .code { background: #f8f8f8; border: 1px solid #ddd; padding: 10px; margin: 5px 0; overflow-x: auto; font-family: monospace; font-size: 12px; }
+        .file-path { color: #d63384; font-weight: bold; }
+        .flow-arrow { text-align: center; font-size: 20px; color: #007cba; margin: 10px 0; }
+        .highlight { background: #fff3cd; padding: 2px 4px; }
+        .storage { background: #d4edda; padding: 10px; margin: 5px 0; }
+        .input-file { background: #f8d7da; padding: 10px; margin: 5px 0; }
+        h1, h2, h3 { color: #007cba; }
+    </style>
+</head>
+<body>
+    <h1>ACMS API Testing Agent - Complete Data Flow</h1>
+
+    <div class="step">
+        <h2>Step 1: INPUT FILES (Problem Statements)</h2>
+        
+        <div class="input-file">
+            <strong>📄 Specification File:</strong> <span class="file-path">specs/main/spec.md</span>
+            <div class="code">
+User Story 1 - Agent Management:
+"Insurance administrators need to manage agent records in the system, 
+including creating new agents, updating their information, retrieving 
+agent details, and deactivating agents when they leave the organization."
+
+Acceptance Scenarios:
+1. Given an authenticated administrator, When they create a new agent 
+   with valid name, email, and commission tier, Then the agent is stored 
+   with a unique ID and can be retrieved
+            </div>
+        </div>
+
+        <div class="input-file">
+            <strong>📄 Constitution File:</strong> <span class="file-path">.specify/memory/constitution.md</span>
+            <div class="code">
+Test-First Automation (NON-NEGOTIABLE):
+"Automated testing is mandatory and must be driven by specifications. 
+Test Agent generates test cases from OpenAPI specs before implementation. 
+All APIs must have comprehensive test coverage including happy-path, 
+edge cases, and error scenarios."
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 2: READING INPUT FILES</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">src/ollama_agent.py</span>
+        <div class="code">
+def generate_test_cases(self, constitution_path: str, spec_path: str, resource: str = "agents") -> str:
+    """Generate test cases from Constitution and Spec."""
+    
+    # Read files - THIS IS WHERE MD FILES ARE READ
+    constitution = self.read_file(constitution_path)  # Reads constitution.md
+    spec = self.read_file(spec_path)                 # Reads spec.md
+    
+    if not constitution or not spec:
+        logger.error("Failed to read constitution or spec files")
+        return ""
+    
+    # Create prompt for AI
+    prompt = self._create_prompt(constitution, spec, resource)
+    
+    # Generate test cases using AI
+    test_code = self.agent.generate_text(prompt, stream=False)
+    
+    return test_code
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 3: CREATING AI PROMPT</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">src/ollama_agent.py</span>
+        <div class="code">
+def _create_prompt(self, constitution: str, spec: str, resource: str) -> str:
+    """Create prompt for test generation."""
+    return f"""Generate pytest test cases for '{resource}' API.
+
+CONSTITUTION (key points):
+{constitution[:2000]}  # First 2000 chars of constitution.md
+
+SPECIFICATION (key points):
+{spec[:2000]}         # First 2000 chars of spec.md
+
+REQUIREMENTS:
+- Use pytest framework
+- Include fixtures for API client and auth
+- Generate happy path, edge cases, and error scenarios
+- Follow test-first automation principles
+- Include assertions for response validation
+"""
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 4: SENDING TO LLAMA3</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">src/ollama_agent.py</span>
+        <div class="code">
+def generate_text(self, prompt: str, stream: bool = False) -> str:
+    """Generate text using Ollama Llama3."""
+    
+    payload = {
+        "model": "llama3",                    # USING LLAMA3 MODEL
+        "prompt": prompt,                     # THE PROMPT FROM STEP 3
+        "stream": False,
+        "options": {
+            "num_predict": 4000,              # Limit output tokens
+            "temperature": 0.7,              # Balanced creativity
+            "top_p": 0.9,
+            "top_k": 40
+        }
+    }
+    
+    # SEND TO LOCAL LLAMA3 SERVER
+    response = requests.post(self.api_endpoint, json=payload, timeout=300)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("response", "")       # GET GENERATED TEST CODE
+        </div>
+        
+        <p><strong>🔗 Endpoint:</strong> <code>http://localhost:11434/api/generate</code> (Local Ollama Server)</p>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 5: STORING GENERATED TESTS</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">run_agent.py</span>
+        <div class="code">
+def save_test_code(self, test_code: str, resource: str) -> Optional[Path]:
+    """Save generated test code to file."""
+    
+    # CREATE OUTPUT DIRECTORY STRUCTURE
+    output_dir = self.config.output_dir / "tests" / "python"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # SAVE TO SPECIFIC FILE
+    output_file = output_dir / f"test_{resource}_generated.py"
+    
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(test_code)                    # WRITE LLAMA3 OUTPUT
+    
+    return output_file
+        </div>
+        
+        <div class="storage">
+            <strong>📁 Storage Location:</strong> <span class="file-path">generated_tests/tests/python/test_agents_generated.py</span>
+            <div class="code">
+Generated test content example:
+import pytest
+import requests
+
+@pytest.fixture
+def api_url():
+    return "http://localhost:8080/api/agents"
+
+def test_create_agent_happy_path(api_url, valid_agent_data):
+    response = requests.post(api_url, json=valid_agent_data)
+    assert response.status_code == 201
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 6: GENERATING MOCK DATA</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">src/mock_data.py</span>
+        <div class="code">
+class MockDataGenerator:
+    """Generate realistic mock data for ACMS testing."""
+    
+    # Sample data pools
+    FIRST_NAMES = ["John", "Jane", "Robert", "Patricia", "Michael", "Jennifer"]
+    LAST_NAMES = ["Smith", "Johnson", "Williams", "Brown", "Jones"]
+    CITIES = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"]
+    
+    def generate_agents(self, count: int = 5) -> List[MockAgent]:
+        """Generate mock agents."""
+        agents = []
+        for i in range(count):
+            agent = MockAgent(
+                id=i + 1,
+                name=f"{random.choice(self.FIRST_NAMES)} {random.choice(self.LAST_NAMES)}",
+                email=f"agent{i+1}@example.com",
+                commissionTier=random.uniform(5, 15),
+                status=random.choice(list(AgentStatus))
+            )
+            agents.append(agent)
+        return agents
+        </div>
+        
+        <div class="storage">
+            <strong>📁 Storage Location:</strong> <span class="file-path">generated_tests/mock_data.json</span>
+            <div class="code">
+{
+  "agents": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "email": "agent1@example.com",
+      "commissionTier": 10.5,
+      "status": "ACTIVE"
+    }
+  ],
+  "policies": [...],
+  "commissions": [...],
+  "payments": [...]
+}
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 7: RUNNING TESTS</h2>
+        
+        <strong>📁 File:</strong> <span class="file-path">src/test_runner.py</span>
+        <div class="code">
+class TestRunner:
+    """Execute generated test cases and collect results."""
+    
+    def run_tests(self, test_files: List[Path]) -> List[TestResult]:
+        """Run pytest on generated test files."""
+        
+        # BUILD PYTEST COMMAND
+        cmd = [
+            "pytest",
+            "-v",                           # Verbose output
+            "--tb=short",                   # Short traceback
+            "--timeout=300",                # 5 minute timeout
+            "-ra",                          # Show all test results
+        ] + [str(f) for f in test_files]   # Add test files
+        
+        # EXECUTE PYTEST
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=600                     # 10 minute total timeout
+        )
+        
+        return self._parse_results(result)  # Parse test output
+        </div>
+        
+        <p><strong>🔗 Test Execution:</strong> <code>pytest -v --tb=short --timeout=300 -ra generated_tests/tests/python/test_agents_generated.py</code></p>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 8: TESTING AGAINST MOCK SERVER</h2>
+        
+        <p><strong>📁 Mock Server:</strong> <span class="file-path">scripts/mock_api_server.py</span> (Started separately)</p>
+        
+        <div class="code">
+# Generated tests hit this mock server:
+@pytest.fixture
+def api_url():
+    return "http://localhost:8080/api/agents"  # MOCK SERVER ENDPOINT
+
+def test_create_agent_happy_path(api_url, valid_agent_data):
+    # Test calls mock server at localhost:8080
+    response = requests.post(api_url, json=valid_agent_data)
+    assert response.status_code == 201
+    
+    # Mock server responds with generated data
+    data = response.json()
+    assert data["name"] == valid_agent_data["name"]
+        </div>
+        
+        <p><strong>🔄 Test Flow:</strong></p>
+        <ol>
+            <li>Generated test sends HTTP request to <code>localhost:8080</code></li>
+            <li>Mock server receives request and returns mock response</li>
+            <li>Test validates response against expectations</li>
+            <li>Pytest reports pass/fail status</li>
+        </ol>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <div class="step">
+        <h2>Step 9: RESULTS STORAGE</h2>
+        
+        <div class="storage">
+            <strong>📁 Test Reports:</strong> <span class="file-path">generated_tests/test_report.html</span>
+            <div class="code">
+HTML Report with:
+- Test execution summary
+- Pass/Fail counts
+- Individual test results
+- Error messages and stack traces
+- Execution timing
+            </div>
+        </div>
+        
+        <div class="storage">
+            <strong>📁 Markdown Report:</strong> <span class="file-path">generated_tests/test_report.md</span>
+            <div class="code">
+# Test Execution Report
+
+## Summary
+- Total Tests: 11
+- Passed: 8
+- Failed: 3
+- Success Rate: 72.7%
+
+## Failed Tests
+- test_create_agent_invalid_name: Connection refused
+- test_get_agent_invalid_id: 404 Not Found
+            </div>
+        </div>
+    </div>
+
+    <hr>
+    
+    <h2>📋 COMPLETE FILE STRUCTURE</h2>
+    <div class="code">
+API-TESTING-AGENT_/
+├── 📄 specs/main/spec.md                    # INPUT: Business requirements
+├── 📄 .specify/memory/constitution.md        # INPUT: Technical standards
+├── 📁 src/
+│   ├── 🐍 ollama_agent.py                   # READS .md files, CALLS Llama3
+│   ├── 🐍 mock_data.py                      # GENERATES test data
+│   └── 🐍 test_runner.py                    # EXECUTES pytest
+├── 🐍 run_agent.py                          # MAIN controller
+├── 📁 generated_tests/
+│   ├── 🐍 tests/python/test_agents_generated.py  # OUTPUT: Generated tests
+│   ├── 📄 mock_data.json                    # OUTPUT: Mock data
+│   ├── 📄 test_report.html                  # OUTPUT: HTML report
+│   └── 📄 test_report.md                    # OUTPUT: Markdown report
+└── 🐍 scripts/mock_api_server.py            # MOCK server for testing
+    </div>
+
+    <hr>
+    
+    <h2>🔄 QUICK COMMAND FLOW</h2>
+    <div class="code">
+# 1. Start everything at once
+python run_agent.py full
+
+# This internally runs:
+# 1. Reads spec.md + constitution.md
+# 2. Sends to Llama3 for test generation  
+# 3. Saves tests to generated_tests/tests/python/
+# 4. Generates mock data to generated_tests/mock_data.json
+# 5. Starts mock server (if needed)
+# 6. Runs pytest on generated tests
+# 7. Creates reports in generated_tests/
+    </div>
+
+</body>
+</html>
